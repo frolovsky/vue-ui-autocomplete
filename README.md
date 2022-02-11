@@ -1,24 +1,12 @@
 # ui-autocomplete
 
-## Project setup
-```
-npm install
-```
+autocomplete с возможностью выбора нескольких значений и подсветкой совпадений поисковой фразы.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Подсветка совпадения с поиском селектов
+![ЦСМС 🔊 2022-02-11 22-48-14](https://user-images.githubusercontent.com/26416755/153660198-5c21526b-c91c-4f1e-b796-e84ca4646eab.jpg)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Несколько выбранных значений (с открытым списком)
+![ЦСМС 🔊 2022-02-11 22-48-38](https://user-images.githubusercontent.com/26416755/153660300-3b5101f4-879a-420b-a26f-fa33c35661cc.jpg)
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Режим multiple, с одним выбранным значением (с закрытым списком)
+![ЦСМС 🔊 2022-02-11 22-50-44](https://user-images.githubusercontent.com/26416755/153660357-e84cd16f-6a9c-4e54-9503-561b6022b332.jpg)
