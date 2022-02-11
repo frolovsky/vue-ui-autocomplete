@@ -1,7 +1,7 @@
 import { DirectiveOptions } from "vue";
 
 interface HTMLElementWithTabOtherEvent extends HTMLElement {
-  tabOtherEvent: (e: any) => void;
+  tabOtherEvent: (e: KeyboardEvent) => void;
 }
 
 export const tabOtherDirective: DirectiveOptions = {

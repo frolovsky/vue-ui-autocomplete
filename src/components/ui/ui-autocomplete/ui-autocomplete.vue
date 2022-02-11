@@ -120,6 +120,10 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import generateUID from "@/helpers/generateUID";
+import {
+  AllowedItemTypes,
+  Item,
+} from "@/components/ui/ui-autocomplete/ui-autocomplete.types";
 
 const UiHighlight = () =>
   import(
@@ -153,43 +157,45 @@ export default class UiAutocomplete extends Vue {
 
   @Prop({ type: String, default: "text" }) itemTextKey!: string;
   @Prop({ type: String, default: "id" }) itemValueKey!: string;
-  @Prop({ type: Array, default: [] }) items!: Array<any>;
-  @Prop({ type: Array, default: [] }) modelValue!: Array<any> | string;
+  @Prop({ type: Array, default: [] }) items!: Array<Item>;
+  @Prop({ type: Array, default: [] }) modelValue!:
+    | Array<AllowedItemTypes>
+    | Item;
 
   @Prop({ type: Boolean, default: false }) multiple!: boolean;
   @Prop({ type: Boolean, default: true }) highlight!: boolean;
 
   search = "";
   id = "";
-  autocompleteData: Array<unknown> = [];
-  selected: any = null;
+  autocompleteData: Array<Item> = [];
+  selected: Item | Array<AllowedItemTypes> | null = null;
   isOpen = false;
 
-  created() {
+  created(): void {
     this.id = generateUID();
     this.autocompleteData = this.items.slice();
     if (this.multiple) {
-      this.selected = this.modelValue;
+      this.selected = this.modelValue as Array<AllowedItemTypes>;
     }
   }
 
-  openItems() {
+  openItems(): void {
     this.isOpen = true;
   }
 
-  closeItems() {
+  closeItems(): void {
     this.isOpen = false;
   }
 
-  toggleItems() {
+  toggleItems(): void {
     this.isOpen = !this.isOpen;
   }
 
-  get filteredItems() {
+  get filteredItems(): Array<Item> {
     return !this.search
       ? this.autocompleteData
-      : this.autocompleteData.filter((item: any) => {
-          const index = item[this.itemTextKey]
+      : this.autocompleteData.filter((item: Item) => {
+          const index = (item[this.itemTextKey] as string)
             .toLocaleLowerCase()
             .indexOf(this.search.toLocaleLowerCase());
           if (index !== -1) {
@@ -197,42 +203,45 @@ export default class UiAutocomplete extends Vue {
           }
           return (
             index !== -1 &&
-            item[this.itemValueKey] !== this.selected?.[this.itemValueKey]
+            item[this.itemValueKey] !==
+              (this.selected as Item)?.[this.itemValueKey]
           );
         });
   }
 
-  selectItem(item: any) {
+  selectItem(item: Item): void {
     if (this.multiple) {
       const value = item[this.itemValueKey];
-      if (this.selected.includes(value)) {
+      if ((this.selected as Array<AllowedItemTypes>).includes(value)) {
         this.removeItemFromSelected(value);
       } else {
-        this.selected.push(value);
+        (this.selected as Array<AllowedItemTypes>).push(value);
       }
     } else {
       this.selected = item;
-      this.search = item[this.itemTextKey];
+      this.search = String(item[this.itemTextKey]);
       this.isOpen = false;
     }
   }
 
-  removeItemFromSelected(value: string | number): any {
-    this.selected = this.selected.filter((i: string | number) => i !== value);
+  removeItemFromSelected(value: AllowedItemTypes): void {
+    this.selected = (this.selected as Array<AllowedItemTypes>).filter(
+      (i: AllowedItemTypes) => i !== value
+    );
   }
 
   @Watch("selected", { deep: true })
-  onUpdateSelected() {
+  onUpdateSelected(): void {
     this.$emit("select", this.selected);
   }
 
-  getTextOfItemById(id: string | number): string {
+  getTextOfItemById(id: AllowedItemTypes): string | undefined {
     return this.items.find((i) => i[this.itemValueKey] === id)?.[
       this.itemTextKey
-    ];
+    ] as string | undefined;
   }
 
-  clear() {
+  clear(): void {
     this.selected = this.multiple ? [] : null;
     this.search = "";
   }
@@ -260,7 +269,7 @@ $table-hover: #f4f8fc;
       display: flex;
       width: 100%;
       font-size: 16px;
-      color: #4F6A92;
+      color: #4f6a92;
       padding: 0 14px;
 
       &:disabled {
