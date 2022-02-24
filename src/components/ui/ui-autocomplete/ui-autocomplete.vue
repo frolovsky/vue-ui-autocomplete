@@ -164,6 +164,7 @@ export default class UiAutocomplete extends Vue {
 
   @Prop({ type: Boolean, default: false }) multiple!: boolean;
   @Prop({ type: Boolean, default: true }) highlight!: boolean;
+  @Prop({ type: Boolean, default: false }) alwaysOpen!: boolean;
 
   search = "";
   id = "";
@@ -177,6 +178,9 @@ export default class UiAutocomplete extends Vue {
     if (this.multiple) {
       this.selected = this.modelValue as Array<AllowedItemTypes>;
     }
+    if (this.alwaysOpen) {
+      this.openItems();
+    }
   }
 
   openItems(): void {
@@ -184,7 +188,9 @@ export default class UiAutocomplete extends Vue {
   }
 
   closeItems(): void {
-    this.isOpen = false;
+    if (!this.alwaysOpen) {
+      this.isOpen = false;
+    }
   }
 
   toggleItems(): void {
